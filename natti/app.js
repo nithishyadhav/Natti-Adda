@@ -1,4 +1,4 @@
-const categories = ['All', 'Karnataka Specials', 'Natti Chicken', 'Biryani', 'Fish', 'Mutton', 'Starters', 'Vegetarian', 'Rice & Combos'];
+const categories = ['All', 'Karnataka Specials', 'Natti Chicken', 'Biryani', 'Kebabs', 'Fish', 'Mutton', 'Starters', 'Vegetarian', 'Rice & Combos'];
 const imageSet = {
   biryani: 'https://images.unsplash.com/photo-1631515243349-e0cb75fb8d3a?auto=format&fit=crop&w=680&q=78',
   chicken: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=680&q=78',
@@ -50,6 +50,11 @@ const seedMenu = [
   ['Veg Biryani','Vegetarian','Seasonal vegetables and fragrant rice, cooked dum-style.','rice',189,'veg',['Biryani']],
   ['Gobi 65','Vegetarian','Crispy cauliflower bites with chilli and fresh herbs.','veg',169,'veg',['Starters']],
   ['Paneer Tikka','Vegetarian','Charred paneer marinated with yogurt and warming spices.','veg',219,'veg',['Starters']],
+  ['Chicken Tikka Kebab','Kebabs','Boneless chicken marinated with yogurt, ginger, garlic and spices, then grilled.','fry',229,'nonveg',[]],
+  ['Chicken Seekh Kebab','Kebabs','Minced chicken seasoned with herbs and spices, shaped on skewers and grilled.','fry',249,'nonveg',[]],
+  ['Chicken Malai Kebab','Kebabs','Tender chicken in a creamy, mild marinade, grilled until lightly charred.','chicken',259,'nonveg',[]],
+  ['Mutton Seekh Kebab','Kebabs','Minced mutton seasoned with fresh herbs and spices, grilled on skewers.','fry',299,'nonveg',[]],
+  ['Hara Bhara Kebab','Kebabs','A grilled vegetarian kebab made with spinach, peas, herbs and warming spices.','veg',219,'veg',[]],
   ['Chicken Fried Rice','Rice & Combos','Wok-fired rice, chicken, egg and a little house spice.','rice',199,'nonveg',[]],
   ['Egg Fried Rice','Rice & Combos','Wok-tossed rice with egg, vegetables and spring onion.','rice',169,'nonveg',[]],
   ['Chicken Meals','Rice & Combos','A filling Karnataka-style chicken meal with rice and sides.','rice',249,'nonveg',[]],
@@ -70,7 +75,13 @@ const readStore = (key, fallback) => {
 };
 const saveStore = (key, value) => localStorage.setItem(key, JSON.stringify(value));
 let menuItems = readStore('natti-menu-v1', seedMenu.map((entry, index) => ({ id: `dish-${index}`, name: entry[0], category: entry[1], description: entry[2], image: imageSet[entry[3]], price: entry[4], diet: entry[5], tags: entry[6], available: true })));
+const kebabItemId = name => `kebab-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
 const legacyMenuUpdates = [
+  ['Chicken Kebab', 'Chicken Tikka Kebab', null, 'Juicy chicken pieces marinated with house spices and grilled until smoky.', 'Boneless chicken marinated with yogurt, ginger, garlic and spices, then grilled.'],
+  ['Chicken Seekh Kebab', null, null, 'Minced chicken with herbs and spices, shaped on skewers and flame-grilled.', 'Minced chicken seasoned with herbs and spices, shaped on skewers and grilled.'],
+  ['Chicken Malai Kebab', null, null, 'Tender chicken in a creamy, gently spiced marinade, charred in the tandoor.', 'Tender chicken in a creamy, mild marinade, grilled until lightly charred.'],
+  ['Mutton Seekh Kebab', null, null, 'Spiced minced mutton with fresh herbs, grilled over a hot flame.', 'Minced mutton seasoned with fresh herbs and spices, grilled on skewers.'],
+  ['Paneer Tikka Kebab', 'Hara Bhara Kebab', null, 'Paneer cubes marinated with yogurt and spices, grilled until golden.', 'A grilled vegetarian kebab made with spinach, peas, herbs and warming spices.'],
   ['Natti Style Chicken Biryani', null, null, 'Country chicken, fragrant rice and a deep Andhra masala.', 'Country chicken, fragrant rice and a deep Karnataka spice blend.'],
   ['Natti Chicken Curry', null, null, 'A homestyle Andhra curry with freshly ground spices.', 'A homestyle Karnataka country chicken curry with freshly ground spices.'],
   ['Natti Chicken Pulusu', 'Natti Chicken Saaru', null, 'Tangy, warming country chicken stew, Andhra-style.', 'A warming country chicken saaru with roasted spices.'],
@@ -88,6 +99,7 @@ for (const [oldName, newName, newCategory, oldDescription, newDescription] of le
   if (!item) continue;
   if (newName) {
     item.name = newName;
+    if (item.category === 'Kebabs') item.id = kebabItemId(newName);
     menuMigrationChanged = true;
   }
   if (newCategory) {
@@ -99,6 +111,22 @@ for (const [oldName, newName, newCategory, oldDescription, newDescription] of le
     menuMigrationChanged = true;
   }
 }
+const seenMenuIds = new Set();
+for (const item of menuItems) {
+  if (item.category === 'Kebabs' && item.id !== kebabItemId(item.name)) {
+    item.id = kebabItemId(item.name);
+    menuMigrationChanged = true;
+  }
+  if (!item.id || seenMenuIds.has(item.id)) {
+    const baseId = `dish-${item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
+    let uniqueId = baseId;
+    let suffix = 2;
+    while (seenMenuIds.has(uniqueId)) uniqueId = `${baseId}-${suffix++}`;
+    item.id = uniqueId;
+    menuMigrationChanged = true;
+  }
+  seenMenuIds.add(item.id);
+}
 if (menuMigrationChanged) saveStore('natti-menu-v1', menuItems);
 const exactBiryani = seedMenu.find(entry => entry[0] === 'Natti Style Chicken Dum Biryani');
 if (!menuItems.some(item => item.name === exactBiryani[0])) {
@@ -106,6 +134,13 @@ if (!menuItems.some(item => item.name === exactBiryani[0])) {
   menuItems.push({ id: `dish-${index}`, name: exactBiryani[0], category: exactBiryani[1], description: exactBiryani[2], image: imageSet[exactBiryani[3]], price: exactBiryani[4], diet: exactBiryani[5], tags: exactBiryani[6], available: true });
   saveStore('natti-menu-v1', menuItems);
 }
+let kebabMenuChanged = false;
+seedMenu.forEach((entry, index) => {
+  if (entry[1] !== 'Kebabs' || menuItems.some(item => item.name === entry[0])) return;
+  menuItems.push({ id: kebabItemId(entry[0]), name: entry[0], category: entry[1], description: entry[2], image: imageSet[entry[3]], price: entry[4], diet: entry[5], tags: entry[6], available: true });
+  kebabMenuChanged = true;
+});
+if (kebabMenuChanged) saveStore('natti-menu-v1', menuItems);
 let karnatakaMenuChanged = false;
 for (const [index, entry] of karnatakaMenu.entries()) {
   if (menuItems.some(item => item.name === entry[0])) continue;
@@ -166,7 +201,7 @@ function renderMenu() {
   document.querySelector('#featured-grid').innerHTML = featuredNames.map(name => menuItems.find(item => item.name === name)).filter(Boolean).map(dishCardHtml).join('');
 }
 function dishCardHtml(item, index = 0) {
-  return `<article class="dish-card${item.available ? '' : ' unavailable'}" style="animation-delay:${Math.min(index, 12) * 25}ms"><div class="dish-image"><img src="${escapeHtml(item.image || imageSet.chicken)}" alt="${escapeHtml(item.name)}" loading="lazy"><span class="diet-dot ${item.diet === 'veg' ? 'veg' : ''}" title="${item.diet === 'veg' ? 'Vegetarian' : 'Non-vegetarian'}"></span><span class="dish-category">${escapeHtml(item.category)}</span></div><div class="dish-info"><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.description)}</p><div class="dish-meta"><span class="dish-price">${money(Number(item.price) || 0)} <small>sample</small></span><button class="add-button" type="button" data-add="${escapeHtml(item.id)}" aria-label="Buy ${escapeHtml(item.name)} now" ${item.available ? '' : 'disabled'}>${item.available ? 'Buy now' : 'Unavailable'}</button></div></div></article>`;
+  return `<article class="dish-card${item.available ? '' : ' unavailable'}" style="animation-delay:${Math.min(index, 12) * 25}ms"><div class="dish-image"><img src="${escapeHtml(item.image || imageSet.chicken)}" alt="${escapeHtml(item.name)}" loading="lazy"><span class="diet-dot ${item.diet === 'veg' ? 'veg' : ''}" title="${item.diet === 'veg' ? 'Vegetarian' : 'Non-vegetarian'}"></span><span class="dish-category">${escapeHtml(item.category)}</span></div><div class="dish-info"><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.description)}</p><div class="dish-meta"><span class="dish-price">${money(Number(item.price) || 0)} <small>sample</small></span><div class="dish-actions"><button class="add-button" type="button" data-add="${escapeHtml(item.id)}" aria-label="${item.available ? `Add ${escapeHtml(item.name)} to cart` : `${escapeHtml(item.name)} unavailable`}" title="${item.available ? 'Add to cart' : 'Unavailable'}" ${item.available ? '' : 'disabled'}>${item.available ? '<span aria-hidden="true">+</span>' : '<span aria-hidden="true">×</span>'}</button><button class="buy-button" type="button" data-buy="${escapeHtml(item.id)}" ${item.available ? '' : 'disabled'}>${item.available ? 'Buy now' : 'Unavailable'}</button></div></div></div></article>`;
 }
 function escapeHtml(value) { return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]); }
 function cartQuantity() { return Object.values(cart).reduce((sum, quantity) => sum + quantity, 0); }
@@ -222,6 +257,14 @@ function addToCart(id) {
   saveStore('natti-cart-v1', cart);
   renderCart();
   showToast(`${item.name} added to your bag`);
+}
+function buyNow(id) {
+  const item = menuItems.find(entry => entry.id === id);
+  if (!item || !item.available) return;
+  cart = { [id]: 1 };
+  saveStore('natti-cart-v1', cart);
+  openCart();
+  document.querySelector('#checkout-form [name="name"]').focus();
 }
 function updateContact() {
   document.querySelector('[data-contact="address"]').textContent = restaurant.address || defaultAddress;
@@ -324,8 +367,10 @@ dateInput.min = new Date().toISOString().slice(0, 10);
 document.addEventListener('click', event => {
   const category = event.target.closest('[data-category]');
   if (category) { activeCategory = category.dataset.category; renderCategories(); renderMenu(); }
+  const buy = event.target.closest('[data-buy]');
+  if (buy) buyNow(buy.dataset.buy);
   const add = event.target.closest('[data-add]');
-  if (add) { addToCart(add.dataset.add); openCart(); }
+  if (add) addToCart(add.dataset.add);
   const quantityButton = event.target.closest('[data-quantity]');
   if (quantityButton) {
     const id = quantityButton.dataset.quantity;
@@ -403,13 +448,13 @@ document.querySelector('#checkout-form').addEventListener('submit', event => {
   const discount = cartOfferDiscount();
   const total = cartTotal();
   const promotion = discount ? `Chicken biryani offer: -${money(discount)}\n` : '';
-  const message = `Hello Natti Adda!\n\nI'd like to place an order:\n${items}\n\nSubtotal: ${money(subtotal)}\n${promotion}Total: ${money(total)}\n\nName: ${data.name}\nPhone: ${data.phone}\nDelivery address: ${data.address}`;
+  const message = `Hello Natti Adda!\n\nI'd like to place this order:\n${items}\n\nSubtotal: ${money(subtotal)}\n${promotion}Total: ${money(total)}\n\nName: ${data.name}\nPhone: ${data.phone}\nDelivery address: ${data.address}`;
   orders.push({ ...data, items: lines.map(line => `${line.quantity} x ${line.item.name}`).join(', '), subtotal, discount, total, status: 'New request', createdAt: new Date().toLocaleString() });
   saveStore('natti-orders-v1', orders);
   const phone = restaurant.phone.replace(/\D/g, '');
   window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
   cart = {}; saveStore('natti-cart-v1', cart); renderCart(); closeCart();
-  showToast('Order prepared in WhatsApp. Send the message to complete your request.');
+  showToast('Order prepared in WhatsApp. Send the message to place your order.');
 });
 
 document.addEventListener('submit', async event => {

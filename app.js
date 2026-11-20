@@ -1,4 +1,4 @@
-const categories = ['All', 'Karnataka Specials', 'Natti Chicken', 'Biryani', 'Kebabs', 'Fish', 'Mutton', 'Starters', 'Vegetarian', 'Rice & Combos'];
+const categories = ['All', 'Karnataka Specials', 'Natti Chicken', 'Biryani', 'Kebabs', 'Fish', 'Mutton', 'Starters', 'Vegetarian', 'Rice & Combos', 'Water Bottle', 'Cool Drinks'];
 const imageSet = {
   biryani: 'https://images.unsplash.com/photo-1631515243349-e0cb75fb8d3a?auto=format&fit=crop&w=680&q=78',
   chicken: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=680&q=78',
@@ -6,7 +6,8 @@ const imageSet = {
   fry: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=680&q=78',
   fish: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=680&q=78',
   veg: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=680&q=78',
-  rice: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=680&q=78'
+  rice: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=680&q=78',
+  drink: 'https://images.unsplash.com/photo-1629203851122-3726ecdf080e?auto=format&fit=crop&w=680&q=78'
 };
 const seedMenu = [
   ['Natti Style Chicken Biryani','Natti Chicken','Country chicken, fragrant rice and a deep Karnataka spice blend.','biryani',269,'nonveg',['Biryani']],
@@ -70,6 +71,79 @@ const karnatakaMenu = [
   ['Bisi Bele Bath','Karnataka Specials','A comforting rice and lentil dish with vegetables and spices.','rice',179,'veg',['Vegetarian']],
   ['Mysore Masala Dosa','Karnataka Specials','Crisp dosa with spiced potato, chutney and sambar.','veg',149,'veg',['Vegetarian']]
 ];
+const riceMenu = [
+  ['Chicken Biryani', 'Classic chicken biryani layered with aromatic rice and house spices.', 'biryani', 229, 'nonveg', ['Biryani']],
+  ['Mutton Biryani', 'Tender mutton and fragrant rice, slow-cooked with warming spices.', 'biryani', 329, 'nonveg', ['Biryani']],
+  ['Chicken Dum Biryani', 'Chicken and seasoned rice sealed together and slow-cooked dum-style.', 'biryani', 269, 'nonveg', ['Biryani']],
+  ['Special Chicken Biryani', 'A generous chicken biryani finished with Natti Adda special masala.', 'biryani', 299, 'nonveg', ['Biryani']],
+  ['Fry Piece Chicken Biryani', 'Fragrant biryani rice served with crisp, spice-rubbed chicken.', 'biryani', 249, 'nonveg', ['Biryani']],
+  ['Boneless Chicken Biryani', 'Boneless chicken tucked into aromatic dum rice.', 'biryani', 249, 'nonveg', ['Biryani']],
+  ['Egg Biryani', 'Egg and slow-cooked rice seasoned with warm spices.', 'biryani', 199, 'nonveg', ['Biryani']],
+  ['Veg Biryani', 'Seasonal vegetables and fragrant rice, cooked dum-style.', 'rice', 189, 'veg', ['Biryani', 'Vegetarian']],
+  ['Paneer Biryani', 'Soft paneer and fragrant biryani rice with toasted spices.', 'rice', 229, 'veg', ['Biryani', 'Vegetarian']],
+  ['Prawn Biryani', 'Juicy prawns and aromatic rice with a coastal spice blend.', 'biryani', 329, 'nonveg', ['Biryani', 'Fish']],
+  ['Fish Biryani', 'Tender fish layered with fragrant rice and coastal spices.', 'biryani', 299, 'nonveg', ['Biryani', 'Fish']],
+  ['Chicken Fried Rice', 'Wok-fried rice with chicken, vegetables and house seasoning.', 'rice', 199, 'nonveg', []],
+  ['Schezwan Chicken Fried Rice', 'Wok-fried chicken rice tossed in a bold Schezwan sauce.', 'rice', 219, 'nonveg', []],
+  ['Veg Fried Rice', 'Wok-fried rice with fresh vegetables and spring onion.', 'rice', 169, 'veg', ['Vegetarian']],
+  ['Schezwan Veg Fried Rice', 'Vegetable fried rice tossed in a spicy Schezwan sauce.', 'rice', 179, 'veg', ['Vegetarian']]
+];
+const drinkBottleStyles = {
+  Water: { color: '#62c9e8', label: '#eafaff', cap: '#168ab4' },
+  Sprite: { color: '#77bd36', label: '#effbdc', cap: '#278c31' },
+  'Coca-Cola': { color: '#a91c26', label: '#fff8ee', cap: '#75131d' },
+  'Thums Up': { color: '#253d76', label: '#f8f3e8', cap: '#ce2d2b' },
+  Pepsi: { color: '#2454a5', label: '#f8f7f1', cap: '#d52e37' },
+  Fanta: { color: '#ef7625', label: '#fff2df', cap: '#d84b16' },
+  '7UP': { color: '#4b9d45', label: '#f0f9e9', cap: '#23743d' },
+  Limca: { color: '#c9d63a', label: '#fffce1', cap: '#74962e' }
+};
+function drinkBottleImage(name) {
+  const { color, label, cap } = drinkBottleStyles[name] || drinkBottleStyles.Water;
+  const labelSize = name === 'Coca-Cola' || name === 'Thums Up' ? 18 : 23;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 420"><defs><linearGradient id="bg" x2="0" y2="1"><stop stop-color="#fffdf8"/><stop offset="1" stop-color="#f0eadc"/></linearGradient><linearGradient id="bottle" x2="1"><stop stop-color="${color}" stop-opacity=".68"/><stop offset=".48" stop-color="${color}"/><stop offset="1" stop-color="${color}" stop-opacity=".72"/></linearGradient><filter id="shadow" x="-.5" y="-.5" width="2" height="2"><feDropShadow dx="0" dy="9" stdDeviation="9" flood-color="#30291f" flood-opacity=".2"/></filter></defs><rect width="680" height="420" rx="24" fill="url(#bg)"/><circle cx="110" cy="80" r="28" fill="${color}" opacity=".09"/><circle cx="570" cy="330" r="48" fill="${color}" opacity=".08"/><ellipse cx="340" cy="374" rx="69" ry="13" fill="#30291f" opacity=".12"/><g transform="translate(160 0)" filter="url(#shadow)"><path d="M157 61h46v33c0 12 9 18 20 27 15 13 22 27 22 48v151c0 27-16 42-38 42h-54c-22 0-38-15-38-42V169c0-21 7-35 22-48 11-9 20-15 20-27z" fill="url(#bottle)" stroke="#fff" stroke-opacity=".85" stroke-width="5"/><path d="M158 53q0-8 8-8h30q8 0 8 8v14h-46z" fill="${cap}"/><path d="M135 191h90v91h-90z" fill="${label}"/><path d="M143 200h74v5h-74z" fill="${color}" opacity=".28"/><text x="180" y="239" text-anchor="middle" fill="${color}" font-family="Arial,sans-serif" font-size="${labelSize}" font-weight="800" letter-spacing="-.5">${name}</text><text x="180" y="259" text-anchor="middle" fill="#5f5a50" font-family="Arial,sans-serif" font-size="9" font-weight="700" letter-spacing="2">${name === 'Water' ? 'DRINKING WATER' : 'REFRESHING DRINK'}</text><path d="M127 166h106" stroke="#fff" stroke-opacity=".42" stroke-width="4"/><path d="M128 291h104" stroke="#fff" stroke-opacity=".36" stroke-width="4"/></g><text x="340" y="405" text-anchor="middle" fill="#6c665b" font-family="Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="3">${name.toUpperCase()}</text></svg>`;
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+const coolDrinkBrands = [
+  ['Sprite', 'Sprite.png', 'Chilled lemon-lime soft drink.'],
+  ['Coca-Cola', 'Coca-Cola.png', 'Chilled cola soft drink.'],
+  ['Thums Up', 'Thums-Up.png', 'Chilled, bold cola soft drink.'],
+  ['Pepsi', 'Pepsi.png', 'Chilled cola soft drink.'],
+  ['Fanta', 'Fanta.png', 'Chilled orange soft drink.'],
+  ['7UP', '7UP.png', 'Chilled lemon-lime soft drink.'],
+  ['Mirinda', 'Mirinda.png', 'Chilled orange soft drink.'],
+  ['Mountain Dew', 'Mountain-Dew.png', 'Chilled citrus soft drink.'],
+  ['Limca', 'Limca.png', 'Chilled lemon-lime soft drink.'],
+  ['Sting', 'Sting.png', 'Chilled energy drink.'],
+  ['Sprite Zero', 'Sprite-Zero.png', 'Chilled zero-sugar lemon-lime soft drink.'],
+  ['Maaza', 'Maaza.png', 'Chilled mango drink.'],
+  ['Real', 'Real.png', 'Chilled fruit drink.'],
+  ['Tropicana', 'Tropicana.png', 'Chilled fruit drink.'],
+  ['Nestlé Juicy Juice', 'Nestle-Juicy-Juice.png', 'Chilled fruit juice.'],
+  ['Appy Fizz', 'Appy-Fizz.png', 'Chilled apple drink.'],
+  ['Gatorade', 'Gatorade.png', 'Chilled sports drink.'],
+  ['Bournvita', 'Bournvita.png', 'Chilled malt drink.']
+];
+const drinkMenu = [
+  { id: 'water-500ml', name: 'Aquafina Water (500 ml)', category: 'Water Bottle', description: '500 ml Aquafina pure drinking water.', image: 'assets/water/Aquafina-500ml.png', price: 10, diet: 'veg', tags: [] },
+  { id: 'water-1l', name: 'Aquafina Water (1 L)', category: 'Water Bottle', description: '1 litre Aquafina pure drinking water.', image: 'assets/water/Aquafina-1l.png', price: 20, diet: 'veg', tags: [] },
+  { id: 'water-2l', name: 'Aquafina Water (2 L)', category: 'Water Bottle', description: '2 litre Aquafina pure drinking water.', image: 'assets/water/Aquafina-2l.png', price: 40, diet: 'veg', tags: [] }
+];
+for (const [brand, image, description] of coolDrinkBrands) {
+  const slug = brand.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  for (const [size, price] of [[150, 10], [250, 20]]) {
+    drinkMenu.push({
+      id: `cool-${slug}-${size}ml`,
+      name: `${brand} (${size} ml)`,
+      category: 'Cool Drinks',
+      description: `${size} ml · ${description}`,
+      image: `assets/drinks/${image}`,
+      price,
+      diet: 'veg',
+      tags: []
+    });
+  }
+}
 const readStore = (key, fallback) => {
   try { const value = JSON.parse(localStorage.getItem(key)); return value ?? fallback; } catch { return fallback; }
 };
@@ -141,6 +215,79 @@ seedMenu.forEach((entry, index) => {
   kebabMenuChanged = true;
 });
 if (kebabMenuChanged) saveStore('natti-menu-v1', menuItems);
+const excludedKebabNames = /\b(veg|paneer|malai|reshmi|seekh)\b/i;
+const excludedKebabItems = menuItems.filter(item =>
+  item.category === 'Kebabs' && (excludedKebabNames.test(item.name) || item.diet === 'veg')
+);
+const excludedKebabIds = excludedKebabItems.map(item => item.id);
+menuItems = menuItems.filter(item => !excludedKebabItems.includes(item));
+const duplicateKebabCartMigrations = new Map();
+const keptKebabNames = new Map();
+menuItems = menuItems.filter(item => {
+  if (item.category !== 'Kebabs') return true;
+  const keptItem = keptKebabNames.get(item.name);
+  if (keptItem) {
+    duplicateKebabCartMigrations.set(item.id, keptItem.id);
+    return false;
+  }
+  keptKebabNames.set(item.name, item);
+  return true;
+});
+const requestedKebabs = [
+  ['Chicken Kebab', 'Juicy chicken pieces marinated with house spices and grilled until smoky.', 'Chicken-Kebab.png', 229],
+  ['Mutton Kebab', 'Tender mutton pieces grilled with aromatic spices.', 'Mutton-Kebab.png', 299],
+  ['Fish Kebab', 'Fish marinated with herbs and spices, then grilled until golden.', 'Fish-Kebab.png', 269],
+  ['Chicken Tikka Kebab', 'Boneless chicken marinated with yogurt and spices, then grilled.', 'Chicken-Tikka.png', 249],
+  ['Boti Kebab', 'Tender boneless meat cubes grilled with a bold spice marinade.', 'Boti-Kebab.png', 279],
+  ['Tandoori Kebab', 'Smoky, tandoor-style chicken marinated with warming spices.', 'Tandoori-Kebab.png', 259],
+  ['Kebab Wrap', 'Grilled kebab wrapped with fresh vegetables and house sauce.', 'Kebab-Wrap.png', 249]
+];
+let requestedKebabsChanged = excludedKebabItems.length > 0 || duplicateKebabCartMigrations.size > 0;
+for (const [name, description, image, price] of requestedKebabs) {
+  const entry = {
+    id: kebabItemId(name),
+    name,
+    category: 'Kebabs',
+    description,
+    image: `assets/kebabs/${image}`,
+    price,
+    diet: 'nonveg',
+    tags: []
+  };
+  const item = menuItems.find(current => current.name === name);
+  if (item) {
+    const changed = item.category !== entry.category || item.description !== entry.description
+      || item.image !== entry.image || Number(item.price) !== entry.price
+      || item.diet !== entry.diet || JSON.stringify(item.tags || []) !== '[]';
+    item.category = entry.category;
+    item.description = entry.description;
+    item.image = entry.image;
+    item.price = entry.price;
+    item.diet = entry.diet;
+    item.tags = entry.tags;
+    if (changed) requestedKebabsChanged = true;
+  } else {
+    menuItems.push({ ...entry, available: true });
+    requestedKebabsChanged = true;
+  }
+}
+const requestedStarters = [
+  { id: 'dish-32', name: 'Chilli Chicken', category: 'Starters', description: 'Wok-tossed chicken with chilli, onion and green pepper.', image: imageSet.chicken, price: 219, diet: 'nonveg', tags: [] },
+  { id: 'starter-dragon-chicken', name: 'Dragon Chicken', category: 'Starters', description: 'Crispy chicken tossed in a fiery chilli-garlic sauce.', image: imageSet.chicken, price: 249, diet: 'nonveg', tags: [] }
+];
+for (const entry of requestedStarters) {
+  const item = menuItems.find(current => current.name === entry.name);
+  if (!item) {
+    menuItems.push({ ...entry, available: true });
+    requestedKebabsChanged = true;
+    continue;
+  }
+  const changed = item.category !== entry.category || item.description !== entry.description;
+  item.category = entry.category;
+  item.description = entry.description;
+  if (changed) requestedKebabsChanged = true;
+}
+if (requestedKebabsChanged) saveStore('natti-menu-v1', menuItems);
 let karnatakaMenuChanged = false;
 for (const [index, entry] of karnatakaMenu.entries()) {
   if (menuItems.some(item => item.name === entry[0])) continue;
@@ -148,7 +295,87 @@ for (const [index, entry] of karnatakaMenu.entries()) {
   karnatakaMenuChanged = true;
 }
 if (karnatakaMenuChanged) saveStore('natti-menu-v1', menuItems);
+let riceMenuChanged = false;
+for (const [index, [name, description, image, price, diet, tags]] of riceMenu.entries()) {
+  const item = menuItems.find(current => current.name === name);
+  if (item) {
+    if (item.category !== 'Rice & Combos') {
+      item.category = 'Rice & Combos';
+      riceMenuChanged = true;
+    }
+    continue;
+  }
+  menuItems.push({
+    id: `rice-menu-${index}`,
+    name,
+    category: 'Rice & Combos',
+    description,
+    image: imageSet[image],
+    price,
+    diet,
+    tags,
+    available: true
+  });
+  riceMenuChanged = true;
+}
+if (riceMenuChanged) saveStore('natti-menu-v1', menuItems);
+const drinkCartMigrations = new Map();
+const legacyDrinkBrands = new Set(coolDrinkBrands.map(([brand]) => brand));
+const legacyDrinkItems = menuItems.filter(item =>
+  item.category === 'Cool Drinks' && legacyDrinkBrands.has(item.name)
+);
+const legacyWaterItems = menuItems.filter(item =>
+  item.category === 'Water Bottle' && (
+    ['Water', 'Hot Water Bottle', 'Cold Water Bottle'].includes(item.name)
+    || /^Water \((500 ml|1 L|2 L)\)$/.test(item.name)
+  )
+);
+for (const item of legacyDrinkItems) {
+  const slug = item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  drinkCartMigrations.set(item.id, `cool-${slug}-250ml`);
+}
+for (const item of legacyWaterItems) {
+  const sizeId = item.name === 'Water (1 L)' ? 'water-1l'
+    : item.name === 'Water (2 L)' ? 'water-2l'
+      : 'water-500ml';
+  drinkCartMigrations.set(item.id, sizeId);
+}
+let drinkMenuChanged = false;
+menuItems = menuItems.filter(item =>
+  !legacyDrinkItems.includes(item) && !legacyWaterItems.includes(item)
+);
+for (const entry of drinkMenu) {
+  const item = menuItems.find(current => current.name === entry.name);
+  if (item) {
+    if (item.id !== entry.id) drinkCartMigrations.set(item.id, entry.id);
+    const changed = item.id !== entry.id || item.category !== entry.category
+      || item.description !== entry.description || item.image !== entry.image
+      || Number(item.price) !== entry.price || item.diet !== entry.diet
+      || JSON.stringify(item.tags || []) !== JSON.stringify(entry.tags);
+    Object.assign(item, entry);
+    item.available = item.available !== false;
+    if (changed) drinkMenuChanged = true;
+  } else {
+    menuItems.push({ ...entry, available: true });
+    drinkMenuChanged = true;
+  }
+}
+if (drinkMenuChanged || legacyDrinkItems.length || legacyWaterItems.length) saveStore('natti-menu-v1', menuItems);
 let cart = readStore('natti-cart-v1', {});
+for (const id of excludedKebabIds) delete cart[id];
+for (const [oldId, newId] of duplicateKebabCartMigrations) {
+  if (cart[oldId]) {
+    cart[newId] = (cart[newId] || 0) + cart[oldId];
+    delete cart[oldId];
+  }
+}
+for (const [oldId, newId] of drinkCartMigrations) {
+  if (cart[oldId]) {
+    cart[newId] = (cart[newId] || 0) + cart[oldId];
+    delete cart[oldId];
+  }
+}
+if (drinkCartMigrations.size || excludedKebabIds.length || duplicateKebabCartMigrations.size) saveStore('natti-cart-v1', cart);
 let reservations = readStore('natti-reservations-v1', []);
 let orders = readStore('natti-orders-v1', []);
 const defaultAddress = '83FV+F9H, SSIT Main Rd, Near SSIT College, Saraswathipuram, Tumakur, Karnataka 572105';
@@ -197,11 +424,13 @@ function renderMenu() {
   const filtered = menuItems.filter(item => (activeCategory === 'All' || item.category === activeCategory || (item.tags || []).includes(activeCategory)) && (!query || `${item.name} ${item.description} ${item.category}`.toLowerCase().includes(query)));
   menuGrid.innerHTML = filtered.map(dishCardHtml).join('');
   document.querySelector('.empty-state').hidden = filtered.length !== 0;
-  const featuredNames = ['Bengaluru Donne Chicken Biryani', 'Coorgi Natti Chicken Curry', 'Mangalorean Fish Fry'];
+  const featuredNames = ['Natti Style Chicken Dum Biryani', 'Chicken 65', 'Mutton Pepper Fry'];
   document.querySelector('#featured-grid').innerHTML = featuredNames.map(name => menuItems.find(item => item.name === name)).filter(Boolean).map(dishCardHtml).join('');
 }
 function dishCardHtml(item, index = 0) {
-  return `<article class="dish-card${item.available ? '' : ' unavailable'}" style="animation-delay:${Math.min(index, 12) * 25}ms"><div class="dish-image"><img src="${escapeHtml(item.image || imageSet.chicken)}" alt="${escapeHtml(item.name)}" loading="lazy"><span class="diet-dot ${item.diet === 'veg' ? 'veg' : ''}" title="${item.diet === 'veg' ? 'Vegetarian' : 'Non-vegetarian'}"></span><span class="dish-category">${escapeHtml(item.category)}</span></div><div class="dish-info"><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.description)}</p><div class="dish-meta"><span class="dish-price">${money(Number(item.price) || 0)} <small>sample</small></span><div class="dish-actions"><button class="add-button" type="button" data-add="${escapeHtml(item.id)}" aria-label="${item.available ? `Add ${escapeHtml(item.name)} to cart` : `${escapeHtml(item.name)} unavailable`}" title="${item.available ? 'Add to cart' : 'Unavailable'}" ${item.available ? '' : 'disabled'}>${item.available ? '<span aria-hidden="true">+</span>' : '<span aria-hidden="true">×</span>'}</button><button class="buy-button" type="button" data-buy="${escapeHtml(item.id)}" ${item.available ? '' : 'disabled'}>${item.available ? 'Buy now' : 'Unavailable'}</button></div></div></div></article>`;
+  const sampleNote = ['Water Bottle', 'Cool Drinks'].includes(item.category) ? '' : ' <small>sample</small>';
+  const imageClass = item.category === 'Water Bottle' ? ' water-bottle-card' : '';
+  return `<article class="dish-card${imageClass}${item.available ? '' : ' unavailable'}" style="animation-delay:${Math.min(index, 12) * 25}ms"><div class="dish-image"><img src="${escapeHtml(item.image || imageSet.chicken)}" alt="${escapeHtml(item.name)}" loading="lazy"><span class="diet-dot ${item.diet === 'veg' ? 'veg' : ''}" title="${item.diet === 'veg' ? 'Vegetarian' : 'Non-vegetarian'}"></span><span class="dish-category">${escapeHtml(item.category)}</span></div><div class="dish-info"><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.description)}</p><div class="dish-meta"><span class="dish-price">${money(Number(item.price) || 0)}${sampleNote}</span><div class="dish-actions"><button class="add-button" type="button" data-add="${escapeHtml(item.id)}" aria-label="${item.available ? `Add ${escapeHtml(item.name)} to cart` : `${escapeHtml(item.name)} unavailable`}" title="${item.available ? 'Add to cart' : 'Unavailable'}" ${item.available ? '' : 'disabled'}>${item.available ? '<span aria-hidden="true">+</span>' : '<span aria-hidden="true">×</span>'}</button><button class="buy-button" type="button" data-buy="${escapeHtml(item.id)}" ${item.available ? '' : 'disabled'}>${item.available ? 'Buy now' : 'Unavailable'}</button></div></div></div></article>`;
 }
 function escapeHtml(value) { return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]); }
 function cartQuantity() { return Object.values(cart).reduce((sum, quantity) => sum + quantity, 0); }
